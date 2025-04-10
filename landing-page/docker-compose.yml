@@ -1,0 +1,11 @@
+services:
+  landing-nginx:
+    image: nginx:alpine
+    container_name: landing-nginx
+    networks:
+      - web-services
+    restart: unless-stopped
+
+networks:
+  web-services:
+    external: true

@@ -1,0 +1,11 @@
+services:
+  doom:
+    image: image/name
+    container_name: container-name
+    networks:
+      - web-services
+    restart: unless-stopped
+
+networks:
+  web-services:
+    external: true
