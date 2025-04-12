@@ -1,0 +1,23 @@
+services:
+  minecraft:
+    image: itzg/minecraft-server
+    # image: itzg/minecraft-server:java8
+    tty: true
+    stdin_open: true
+    networks:
+      - web-services
+    environment:
+      VERSION: "1.20.1"
+      EULA: "TRUE"
+      MEMORY: 16G
+      TYPE: "forge"
+      OPS: |
+        MisterCricro
+      ONLINE_MODE: false # !
+      ALLOW_FLIGHT: true
+    volumes:
+      - ./data:/data
+
+networks:
+  web-services:
+    external: true

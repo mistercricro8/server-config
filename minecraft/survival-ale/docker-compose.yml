@@ -1,11 +1,13 @@
 services:
-  mc:
+  minecraft:
     image: itzg/minecraft-server
     # image: itzg/minecraft-server:java8
     tty: true
     stdin_open: true
     ports:
       - "25565:25565"
+    networks:
+      - web-services
     environment:
       VERSION: "1.20.1"
       EULA: "TRUE"
@@ -17,3 +19,7 @@ services:
 
     volumes:
       - ./data:/data
+
+networks:
+    web-services:
+        external: true
