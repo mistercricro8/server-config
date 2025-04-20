@@ -1,0 +1,16 @@
+services:
+  tailscale:
+    image: tailscale/tailscale
+    container_name: tailscale
+    hostname: cricro-vm
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    volumes:
+      - ./tailscale/state:/var/lib/tailscale
+    environment:
+      - TS_AUTHKEY=${TAILSCALE_AUTH_KEY}
+      - TS_EXTRA_ARGS=--login-server=${HEADSCALE_DOMAIN} --advertise-exit-node
