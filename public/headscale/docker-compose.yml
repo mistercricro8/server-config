@@ -12,45 +12,45 @@ services:
       - ./data/run:/var/run
     command: serve
     networks:
-      - proxy-pub
+      - internal-proxy
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.${ROUTER_NAME}.entrypoints=http"
-      - "traefik.http.routers.${ROUTER_NAME}.rule=${ROUTER_RULE}"
-      - "traefik.http.middlewares.${ROUTER_NAME}-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.${ROUTER_NAME}.middlewares=${ROUTER_NAME}-https-redirect"
-      - "traefik.http.routers.${ROUTER_NAME}-secure.entrypoints=https"
-      - "traefik.http.routers.${ROUTER_NAME}-secure.rule=${ROUTER_RULE}"
-      - "traefik.http.routers.${ROUTER_NAME}-secure.tls=true"
-      - "traefik.http.routers.${ROUTER_NAME}-secure.service=${ROUTER_NAME}"
-      - "traefik.http.services.${ROUTER_NAME}.loadbalancer.server.port=8080"
-      - "traefik.http.routers.${ROUTER_NAME}-secure.middlewares=headscale-cors"
-      - "traefik.http.middlewares.headscale-cors.headers.accessControlAllowMethods=GET,POST,PUT,PATCH,DELETE,OPTIONS"
-      - "traefik.http.middlewares.headscale-cors.headers.accessControlAllowHeaders=Authorization,Content-Type"
-      - "traefik.http.middlewares.headscale-cors.headers.accessControlAllowOriginList=${HEADSCALE_ADMIN_URL}"
-      - "traefik.http.middlewares.headscale-cors.headers.accessControlMaxAge=100"
-      - "traefik.http.middlewares.headscale-cors.headers.addVaryHeader=true"
-      - "traefik.docker.network=proxy"
+      - traefik.enable=true
+      - traefik.http.routers.${ROUTER_NAME}.entrypoints=http
+      - traefik.http.routers.${ROUTER_NAME}.rule=${ROUTER_RULE}
+      - traefik.http.middlewares.${ROUTER_NAME}-https-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.${ROUTER_NAME}.middlewares=${ROUTER_NAME}-https-redirect
+      - traefik.http.routers.${ROUTER_NAME}-secure.entrypoints=https
+      - traefik.http.routers.${ROUTER_NAME}-secure.rule=${ROUTER_RULE}
+      - traefik.http.routers.${ROUTER_NAME}-secure.tls=true
+      - traefik.http.routers.${ROUTER_NAME}-secure.service=${ROUTER_NAME}
+      - traefik.http.services.${ROUTER_NAME}.loadbalancer.server.port=8080
+      - traefik.http.routers.${ROUTER_NAME}-secure.middlewares=headscale-cors
+      - traefik.http.middlewares.headscale-cors.headers.accessControlAllowMethods=GET,POST,PUT,PATCH,DELETE,OPTIONS
+      - traefik.http.middlewares.headscale-cors.headers.accessControlAllowHeaders=Authorization,Content-Type
+      - traefik.http.middlewares.headscale-cors.headers.accessControlAllowOriginList=${HEADSCALE_ADMIN_URL}
+      - traefik.http.middlewares.headscale-cors.headers.accessControlMaxAge=100
+      - traefik.http.middlewares.headscale-cors.headers.addVaryHeader=true
+      - traefik.docker.network=proxy
 
   headscale-admin:
     image: goodieshq/headscale-admin:0.25.1
     container_name: headscale-admin
     restart: unless-stopped
     networks:
-      - proxy-pub
+      - internal-proxy
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.${ROUTER_NAME}-admin.entrypoints=http"
-      - "traefik.http.routers.${ROUTER_NAME}-admin.rule=${ROUTER_ADMIN_RULE}"
-      - "traefik.http.middlewares.${ROUTER_NAME}-admin-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.${ROUTER_NAME}-admin.middlewares=${ROUTER_NAME}-admin-https-redirect"
-      - "traefik.http.routers.${ROUTER_NAME}-admin-secure.entrypoints=https"
-      - "traefik.http.routers.${ROUTER_NAME}-admin-secure.rule=${ROUTER_ADMIN_RULE}"
-      - "traefik.http.routers.${ROUTER_NAME}-admin-secure.tls=true"
-      - "traefik.http.routers.${ROUTER_NAME}-admin-secure.service=${ROUTER_NAME}-admin"
-      - "traefik.http.services.${ROUTER_NAME}-admin.loadbalancer.server.port=80"
-      - "traefik.docker.network=proxy"
+      - traefik.enable=true
+      - traefik.http.routers.${ROUTER_NAME}-admin.entrypoints=http
+      - traefik.http.routers.${ROUTER_NAME}-admin.rule=${ROUTER_ADMIN_RULE}
+      - traefik.http.middlewares.${ROUTER_NAME}-admin-https-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.${ROUTER_NAME}-admin.middlewares=${ROUTER_NAME}-admin-https-redirect
+      - traefik.http.routers.${ROUTER_NAME}-admin-secure.entrypoints=https
+      - traefik.http.routers.${ROUTER_NAME}-admin-secure.rule=${ROUTER_ADMIN_RULE}
+      - traefik.http.routers.${ROUTER_NAME}-admin-secure.tls=true
+      - traefik.http.routers.${ROUTER_NAME}-admin-secure.service=${ROUTER_NAME}-admin
+      - traefik.http.services.${ROUTER_NAME}-admin.loadbalancer.server.port=80
+      - traefik.docker.network=proxy
 
 networks:
-  proxy-pub:
+  internal-proxy:
     external: true

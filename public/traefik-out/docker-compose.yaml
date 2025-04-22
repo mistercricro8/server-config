@@ -11,12 +11,10 @@ services:
     secrets:
       - cf-token
     networks:
-      - proxy-pub
+      - internal-proxy
     ports:
       - 80:80
       - 443:443
-     # - 10000:10000 # optional
-     # - 33073:33073 # optional
     environment:
       - TRAEFIK_DASHBOARD_CREDENTIALS=${TRAEFIK_DASHBOARD_CREDENTIALS}
       - CF_DNS_API_TOKEN_FILE=/run/secrets/cf-token
@@ -28,22 +26,22 @@ services:
       - ./config.yaml:/config.yaml:ro
       - ./data/logs:/var/log/traefik
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik.entrypoints=http"
-      - "traefik.http.routers.traefik.rule=Host(`nproxy.mistercricro8.me`)"
-      - "traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIK_DASHBOARD_CREDENTIALS}"
-      - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
-      - "traefik.http.routers.traefik.middlewares=traefik-https-redirect"
-      - "traefik.http.routers.traefik-secure.entrypoints=https"
-      - "traefik.http.routers.traefik-secure.rule=Host(`nproxy.mistercricro8.me`)"
-      - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
-      - "traefik.http.routers.traefik-secure.tls=true"
-      - "traefik.http.routers.traefik-secure.tls.certresolver=cloudflare"
-      - "traefik.http.routers.traefik-secure.tls.domains[0].main=mistercricro8.me"
-      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.mistercricro8.me"
-      - "traefik.http.routers.traefik-secure.service=api@internal"
+      - traefik.enable=true
+      - traefik.http.routers.${ROUTER_NAME}.entrypoints=http
+      - traefik.http.routers.${ROUTER_NAME}.rule=${ROUTER_RULE}
+      - traefik.http.middlewares.${ROUTER_NAME}-auth.basicauth.users=${TRAEFIK_DASHBOARD_CREDENTIALS}
+      - traefik.http.middlewares.${ROUTER_NAME}-https-redirect.redirectscheme.scheme=https
+      - traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https
+      - traefik.http.routers.${ROUTER_NAME}.middlewares=${ROUTER_NAME}-https-redirect
+      - traefik.http.routers.${ROUTER_NAME}-secure.entrypoints=https
+      - traefik.http.routers.${ROUTER_NAME}-secure.rule=${ROUTER_RULE}
+      - traefik.http.routers.${ROUTER_NAME}-secure.middlewares=${ROUTER_NAME}-auth
+      - traefik.http.routers.${ROUTER_NAME}-secure.tls=true
+      - traefik.http.routers.${ROUTER_NAME}-secure.tls.certresolver=cloudflare
+      - traefik.http.routers.${ROUTER_NAME}-secure.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.${ROUTER_NAME}-secure.tls.domains[0].sans=*.${DOMAIN}
+      - traefik.http.routers.${ROUTER_NAME}-secure.service=api@internal
 
 networks:
-  proxy-pub:
+  internal-proxy:
     external: true

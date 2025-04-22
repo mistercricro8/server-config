@@ -1,0 +1,20 @@
+services:
+  minecraft:
+    image: itzg/minecraft-server
+    # image: itzg/minecraft-server:java8
+    tty: true
+    restart: unless-stopped
+    stdin_open: true
+    ports:
+      - 25565:25565
+    environment:
+      VERSION: "1.20.1"
+      EULA: "TRUE"
+      MEMORY: 16G
+      TYPE: "forge"
+      OPS: |
+        MisterCricro
+      ONLINE_MODE: false # !
+      ALLOW_FLIGHT: true
+    volumes:
+      - ./data:/data

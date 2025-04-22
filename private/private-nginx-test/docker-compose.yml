@@ -1,18 +1,10 @@
 services:
-  pihole:
-    container_name: pihole
-    restart: unless-stopped
-    image: pihole/pihole:latest
-    ports:
-      - 53:53/tcp
-      - 53:53/udp
-    environment:
-      TZ: 'Etc/UTC'
-      FTLCONF_webserver_api_password: ${WEBSERVER_PASSWORD}    
-    volumes:
-      - ./etc-pihole:/etc/pihole
+  private-nginx-test:
+    image: nginx:alpine
+    container_name: private-nginx-test
     networks:
       - internal-proxy
+    restart: unless-stopped
     labels:
       - traefik.enable=true
       - traefik.http.routers.${ROUTER_NAME}.entrypoints=http
