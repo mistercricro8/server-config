@@ -1,0 +1,8 @@
+services:
+  stress-ng:
+    container_name: stress-ng
+    image: alexeiled/stress-ng
+    entrypoint: /stress-ng
+    command: --cpu 4 --cpu-load 15
+    restart: always
+networks: {}

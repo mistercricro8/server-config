@@ -1,0 +1,27 @@
+[
+	{
+		"name": "private-nginx-test.mistercricro8.me",
+		"type": "A",
+		"value": "100.64.0.5"
+	},
+	{
+		"name": "pihole.mistercricro8.me",
+		"type": "A",
+		"value": "100.64.0.5"
+	},
+	{
+		"name": "pwd.mistercricro8.me",
+		"type": "A",
+		"value": "100.64.0.5"
+	},
+	{
+		"name": "headscale-admin.mistercricro8.me",
+		"type": "A",
+		"value": "100.64.0.5"
+	},
+	{
+		"name": "dockge.mistercricro8.me",
+		"type": "A",
+		"value": "100.64.0.5"
+	}
+]

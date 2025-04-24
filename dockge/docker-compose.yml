@@ -1,0 +1,28 @@
+services:
+  dockge:
+    image: louislam/dockge:1
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data:/app/data
+      - ${FULL_PATH}:${FULL_PATH}
+    environment:
+      - DOCKGE_STACKS_DIR=${FULL_PATH}
+    networks:
+      - internal-proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${ROUTER_NAME}.entrypoints=http
+      - traefik.http.routers.${ROUTER_NAME}.rule=${ROUTER_RULE}
+      - traefik.http.middlewares.${ROUTER_NAME}-https-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.${ROUTER_NAME}.middlewares=${ROUTER_NAME}-https-redirect
+      - traefik.http.routers.${ROUTER_NAME}-secure.entrypoints=https
+      - traefik.http.routers.${ROUTER_NAME}-secure.rule=${ROUTER_RULE}
+      - traefik.http.routers.${ROUTER_NAME}-secure.tls=true
+      - traefik.http.routers.${ROUTER_NAME}-secure.service=${ROUTER_NAME}
+      - traefik.http.services.${ROUTER_NAME}.loadbalancer.server.port=5001
+      - traefik.docker.network=proxy
+
+networks:
+  internal-proxy:
+    external: true
