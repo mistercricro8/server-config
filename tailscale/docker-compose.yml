@@ -15,3 +15,4 @@ services:
       - TS_AUTHKEY=${TAILSCALE_AUTH_KEY}
       - TS_EXTRA_ARGS=--login-server=${HEADSCALE_DOMAIN} --advertise-exit-node
       - TS_AUTH_ONCE=true
+      - TS_USERSPACE=false

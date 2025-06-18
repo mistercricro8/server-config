@@ -2,26 +2,31 @@
 	{
 		"name": "private-nginx-test.mistercricro8.me",
 		"type": "A",
-		"value": "100.64.0.5"
+		"value": "100.64.0.13"
 	},
 	{
 		"name": "pihole.mistercricro8.me",
 		"type": "A",
-		"value": "100.64.0.5"
+		"value": "100.64.0.13"
 	},
 	{
 		"name": "pwd.mistercricro8.me",
 		"type": "A",
-		"value": "100.64.0.5"
+		"value": "100.64.0.13"
 	},
 	{
 		"name": "headscale-admin.mistercricro8.me",
 		"type": "A",
-		"value": "100.64.0.5"
+		"value": "100.64.0.13"
 	},
 	{
-		"name": "dockge.mistercricro8.me",
+		"name": "tools.mistercricro8.me",
 		"type": "A",
-		"value": "100.64.0.5"
+		"value": "100.64.0.13"
+	},
+	{
+		"name": "cite.mistercricro8.me",
+		"type": "A",
+		"value": "100.64.0.12"
 	}
 ]
