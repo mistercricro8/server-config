@@ -28,5 +28,10 @@
 		"name": "cite.mistercricro8.me",
 		"type": "A",
 		"value": "100.64.0.12"
+	},
+	{
+		"name": "copyables-admin.mistercricro8.me",
+		"type": "A",
+		"value": "100.64.0.13"
 	}
 ]
