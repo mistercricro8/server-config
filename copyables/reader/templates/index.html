@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Copyables</title>
+</head>
+<body>
+    <h1>Saved Copyables</h1>
+    <ul>
+        {% for item in copyables %}
+            <li>
+                <a href="/view/{{ item.filename }}">{{ item.title }}</a>
+                <p>{{ item.description }}</p>
+            </li>
+        {% else %}
+            <li>No copyables found</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
