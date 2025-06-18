@@ -10,11 +10,11 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.${ROUTER_NAME}-admin.entrypoints=http
-      - traefik.http.routers.${ROUTER_NAME}-admin.rule=${ROUTER_ADMIN_RULE}
+      - traefik.http.routers.${ROUTER_NAME}-admin.rule=${ROUTER_RULE}
       - traefik.http.middlewares.${ROUTER_NAME}-admin-https-redirect.redirectscheme.scheme=https
       - traefik.http.routers.${ROUTER_NAME}-admin.middlewares=${ROUTER_NAME}-admin-https-redirect
       - traefik.http.routers.${ROUTER_NAME}-admin-secure.entrypoints=https
-      - traefik.http.routers.${ROUTER_NAME}-admin-secure.rule=${ROUTER_ADMIN_RULE}
+      - traefik.http.routers.${ROUTER_NAME}-admin-secure.rule=${ROUTER_RULE}
       - traefik.http.routers.${ROUTER_NAME}-admin-secure.tls=true
       - traefik.http.routers.${ROUTER_NAME}-admin-secure.service=${ROUTER_NAME}-admin
       - traefik.http.services.${ROUTER_NAME}-admin.loadbalancer.server.port=5000
@@ -31,7 +31,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.${ROUTER_NAME2}-admin.entrypoints=http
-      - traefik.http.routers.${ROUTER_NAME2}-admin.rule=${ROUTER_ADMIN_RULE2}
+      - traefik.http.routers.${ROUTER_NAME2}-admin.rule=${ROUTER_RULE2}
       - traefik.http.middlewares.${ROUTER_NAME2}-admin-https-redirect.redirectscheme.scheme=https
       - traefik.http.routers.${ROUTER_NAME2}-admin.middlewares=${ROUTER_NAME2}-admin-https-redirect
       - traefik.http.routers.${ROUTER_NAME2}-admin-secure.entrypoints=https
