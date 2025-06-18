@@ -35,7 +35,7 @@ services:
       - traefik.http.middlewares.${ROUTER_NAME2}-admin-https-redirect.redirectscheme.scheme=https
       - traefik.http.routers.${ROUTER_NAME2}-admin.middlewares=${ROUTER_NAME2}-admin-https-redirect
       - traefik.http.routers.${ROUTER_NAME2}-admin-secure.entrypoints=https
-      - traefik.http.routers.${ROUTER_NAME2}-admin-secure.rule=${ROUTER_ADMIN_RULE2}
+      - traefik.http.routers.${ROUTER_NAME2}-admin-secure.rule=${ROUTER_RULE2}
       - traefik.http.routers.${ROUTER_NAME2}-admin-secure.tls=true
       - traefik.http.routers.${ROUTER_NAME2}-admin-secure.service=${ROUTER_NAME2}-admin
       - traefik.http.services.${ROUTER_NAME2}-admin.loadbalancer.server.port=5000
