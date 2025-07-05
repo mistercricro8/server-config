@@ -1,0 +1,114 @@
+x-common:
+  database:
+    &db-environment
+    MYSQL_PASSWORD: &db-password ${MYSQL_PASSWD}
+    MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWD}
+  panel:
+    &panel-environment
+    APP_URL: "https://pteropanel.mistercricro8.me"
+    APP_TIMEZONE: "America/Lima"
+    APP_SERVICE_AUTHOR: "youremail@gmail.com"
+
+services:
+  wings:
+    image: ghcr.io/pterodactyl/wings:latest
+    restart: always
+    ports:
+      - 2022:2022
+    networks:
+      - wings0
+      - internal-proxy
+    tty: true
+    environment:
+      TZ: "America/Lima"
+      WINGS_UID: 988
+      WINGS_GID: 988
+      WINGS_USERNAME: pterodactyl
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/var/lib/docker/containers:/var/lib/docker/containers"
+      - "/home/ubuntu/server-config/pterodactyl/wings/config:/etc/pterodactyl"
+      - "/var/lib/pterodactyl:/var/lib/pterodactyl"
+      - "/var/log/pterodactyl:/var/log/pterodactyl"
+      - "/tmp/pterodactyl/:/tmp/pterodactyl/"
+      - "/etc/ssl/certs:/etc/ssl/certs:ro"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${ROUTER_NAME_WINGS}.entrypoints=http
+      - traefik.http.routers.${ROUTER_NAME_WINGS}.rule=${ROUTER_RULE_WINGS}
+      - traefik.http.middlewares.${ROUTER_NAME_WINGS}-https-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.${ROUTER_NAME_WINGS}.middlewares=${ROUTER_NAME_WINGS}-https-redirect
+      - traefik.http.routers.${ROUTER_NAME_WINGS}-secure.entrypoints=https
+      - traefik.http.routers.${ROUTER_NAME_WINGS}-secure.rule=${ROUTER_RULE_WINGS}
+      - traefik.http.routers.${ROUTER_NAME_WINGS}-secure.tls=true
+      - traefik.http.routers.${ROUTER_NAME_WINGS}-secure.service=${ROUTER_NAME_WINGS}
+      - traefik.http.services.${ROUTER_NAME_WINGS}.loadbalancer.server.port=443
+      - traefik.docker.network=proxy
+
+  database:
+    image: mariadb:10.5
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - inner-network
+    volumes:
+      - "/home/ubuntu/server-config/pterodactyl/panel/database:/var/lib/mysql"
+    environment:
+      <<: *db-environment
+      MYSQL_DATABASE: "panel"
+      MYSQL_USER: "pterodactyl"
+
+  cache:
+    image: redis:alpine
+    networks:
+      - inner-network
+    restart: always
+
+  panel:
+    image: ghcr.io/pterodactyl/panel:latest
+    restart: always
+    container_name: pterodactyl-panel
+    networks:
+      - internal-proxy
+      - inner-network
+    volumes:
+      - "/home/ubuntu/server-config/pterodactyl/panel/appvar/:/app/var/"
+      - "/home/ubuntu/server-config/pterodactyl/panel/nginx/:/etc/nginx/http.d/"
+      - "/home/ubuntu/server-config/pterodactyl/panel/logs/:/app/storage/logs"
+    environment:
+      <<: [*panel-environment]
+      DB_PASSWORD: *db-password
+      APP_ENV: "production"
+      APP_ENVIRONMENT_ONLY: "false"
+      CACHE_DRIVER: "redis"
+      SESSION_DRIVER: "redis"
+      QUEUE_DRIVER: "redis"
+      REDIS_HOST: "cache"
+      DB_HOST: "database"
+      DB_PORT: "3306"
+      TRUSTED_PROXIES: "*"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${ROUTER_NAME_PANEL}.entrypoints=http
+      - traefik.http.routers.${ROUTER_NAME_PANEL}.rule=${ROUTER_RULE_PANEL}
+      - traefik.http.middlewares.${ROUTER_NAME_PANEL}-https-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.${ROUTER_NAME_PANEL}.middlewares=${ROUTER_NAME_PANEL}-https-redirect
+      - traefik.http.routers.${ROUTER_NAME_PANEL}-secure.entrypoints=https
+      - traefik.http.routers.${ROUTER_NAME_PANEL}-secure.rule=${ROUTER_RULE_PANEL}
+      - traefik.http.routers.${ROUTER_NAME_PANEL}-secure.tls=true
+      - traefik.http.routers.${ROUTER_NAME_PANEL}-secure.service=${ROUTER_NAME_PANEL}
+      - traefik.http.services.${ROUTER_NAME_PANEL}.loadbalancer.server.port=80
+      - traefik.docker.network=proxy
+
+networks:
+  internal-proxy:
+    external: true
+  inner-network:
+  wings0:
+    name: wings0
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.22.0.0/16
+    driver_opts:
+      com.docker.network.bridge.name: wings0
